@@ -71,6 +71,22 @@
             }
         }
 
+        public void UpdateEmployee(Employee employee)
+        {
+            using (SqlConnection con = new SqlConnection(DBString))
+            {
+                SqlCommand cmd = new SqlCommand("spUpdateEmployee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", employee.ID);
+                cmd.Parameters.AddWithValue("@Name", employee.Name);
+                cmd.Parameters.AddWithValue("@Email", employee.Email);
+                cmd.Parameters.AddWithValue("@Password", employee.Password);
+                cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         private readonly string DBString = "Data Source=KNKNS;Initial Catalog=aashish;Integrated Security=True";
     }
 }
