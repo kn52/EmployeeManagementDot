@@ -13,8 +13,10 @@
 
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spGetAllEmployees", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("spGetAllEmployees", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 con.Open();
                 SqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -39,8 +41,10 @@
 
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spGetEmployeeById", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("spGetEmployeeById", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@EmpId", id);
                 con.Open();
                 SqlDataReader rdr = cmd.ExecuteReader();
@@ -60,8 +64,10 @@
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spAddEmployee", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("spAddEmployee", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@Name", employee.Name);
                 cmd.Parameters.AddWithValue("@Email", employee.Email);
                 cmd.Parameters.AddWithValue("@Password", employee.Password);
@@ -75,8 +81,10 @@
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spUpdateEmployee", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("spUpdateEmployee", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@EmpId", employee.ID);
                 cmd.Parameters.AddWithValue("@Name", employee.Name);
                 cmd.Parameters.AddWithValue("@Email", employee.Email);
@@ -91,8 +99,10 @@
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spDeleteEmployee", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("spDeleteEmployee", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@EmpId", id);
                 con.Open();
                 cmd.ExecuteNonQuery();
