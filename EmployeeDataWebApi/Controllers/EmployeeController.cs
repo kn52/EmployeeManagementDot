@@ -33,16 +33,16 @@
 
         // PUT api/values/5
         [HttpPut]
-        public void Put([FromBody] Employee employee)
+        public bool Put([FromBody] Employee employee)
         {
-            repository.UpdateEmployee(employee);
+            return repository.UpdateEmployee(employee);
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            repository.DeleteEmployee(id);
+            return repository.DeleteEmployee(id);
         }
     }
 }
