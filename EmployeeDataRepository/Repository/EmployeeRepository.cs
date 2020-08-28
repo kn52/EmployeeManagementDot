@@ -87,6 +87,18 @@
             }
         }
 
+        public void DeleteEmployee(int? id)
+        {
+            using (SqlConnection con = new SqlConnection(DBString))
+            {
+                SqlCommand cmd = new SqlCommand("spDeleteEmployee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", id);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         private readonly string DBString = "Data Source=KNKNS;Initial Catalog=aashish;Integrated Security=True";
     }
 }

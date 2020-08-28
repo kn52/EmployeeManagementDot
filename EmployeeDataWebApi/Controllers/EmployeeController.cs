@@ -42,6 +42,7 @@
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            repository.DeleteEmployee(id);
         }
     }
 }
