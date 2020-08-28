@@ -49,27 +49,39 @@
 
         public Employee GetEmployeeById(int? id)
         {
-            Employee employee = new Employee();
-
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spGetEmployeeById", con)
+                using (SqlCommand cmd = new SqlCommand("spGetEmployeeById", con)
                 {
                     CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@EmpId", id);
-                con.Open();
-                SqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                })
                 {
-                    employee.ID = Convert.ToInt32(rdr["Id"]);
-                    employee.Name = rdr["Name"].ToString();
-                    employee.Email = rdr["Email"].ToString();
-                    employee.Password = rdr["Password"].ToString();
-                    employee.PhoneNumber = rdr["PhoneNumber"].ToString();
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@EmpId", id);
+                        con.Open();
+                        SqlDataReader rdr = cmd.ExecuteReader();
+                        if (rdr.HasRows)
+                        {
+                            Employee employee = new Employee();
+                            while (rdr.Read())
+                            {
+                                employee.ID = Convert.ToInt32(rdr["Id"]);
+                                employee.Name = rdr["Name"].ToString();
+                                employee.Email = rdr["Email"].ToString();
+                                employee.Password = rdr["Password"].ToString();
+                                employee.PhoneNumber = rdr["PhoneNumber"].ToString();
+                            }
+                            return employee;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
                 }
             }
-            return employee;
+            return null;
         }
 
         public void AddEmployee(Employee employee)
