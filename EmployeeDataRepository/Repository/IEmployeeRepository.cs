@@ -9,6 +9,6 @@
         Employee GetEmployeeById(int? id);
         bool AddEmployee(Employee employee);
         bool UpdateEmployee(Employee employee);
-        void DeleteEmployee(int? id);
+        bool DeleteEmployee(int? id);
     }
 }

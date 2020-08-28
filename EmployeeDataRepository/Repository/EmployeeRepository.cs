@@ -147,18 +147,32 @@
             return false;
         }
 
-        public void DeleteEmployee(int? id)
+        public bool DeleteEmployee(int? id)
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spDeleteEmployee", con)
+                using (SqlCommand cmd = new SqlCommand("spDeleteEmployee", con)
                 {
                     CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@EmpId", id);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                })
+                {
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@EmpId", id);
+                        con.Open();
+                        int count = cmd.ExecuteNonQuery();
+                        if (count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
             }
+            return false;
         }
 
         private readonly string DBString = "Data Source=KNKNS;Initial Catalog=aashish;Integrated Security=True";
