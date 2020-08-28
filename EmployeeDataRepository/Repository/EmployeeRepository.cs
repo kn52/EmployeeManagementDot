@@ -9,30 +9,42 @@
     {
         public IEnumerable<Employee> GetAllEmployees()
         {
-            List<Employee> employeeList = new List<Employee>();
-
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spGetAllEmployees", con)
+                using (SqlCommand cmd = new SqlCommand("spGetAllEmployees", con)
                 {
                     CommandType = CommandType.StoredProcedure
-                };
-                con.Open();
-                SqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                })
                 {
-                    Employee employee = new Employee
+                    try
                     {
-                        ID = Convert.ToInt32(rdr["Id"]),
-                        Name = rdr["Name"].ToString(),
-                        Email = rdr["Email"].ToString(),
-                        Password = rdr["Password"].ToString(),
-                        PhoneNumber = rdr["PhoneNumber"].ToString()
-                    };
-                    employeeList.Add(employee);
+                        con.Open();
+                        SqlDataReader rdr = cmd.ExecuteReader();
+                        if (rdr.HasRows)
+                        {
+                            List<Employee> employeeList = new List<Employee>();
+                            while (rdr.Read())
+                            {
+                                Employee employee = new Employee
+                                {
+                                    ID = Convert.ToInt32(rdr["Id"]),
+                                    Name = rdr["Name"].ToString(),
+                                    Email = rdr["Email"].ToString(),
+                                    Password = rdr["Password"].ToString(),
+                                    PhoneNumber = rdr["PhoneNumber"].ToString()
+                                };
+                                employeeList.Add(employee);
+                            }
+                            return employeeList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
                 }
             }
-            return employeeList;
+            return null;
         }
 
         public Employee GetEmployeeById(int? id)
