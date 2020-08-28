@@ -26,9 +26,9 @@
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] Employee employee)
+        public bool Post([FromBody] Employee employee)
         {
-            repository.AddEmployee(employee);
+            return repository.AddEmployee(employee);
         }
 
         // PUT api/values/5

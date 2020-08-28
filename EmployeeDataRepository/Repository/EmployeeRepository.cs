@@ -84,21 +84,35 @@
             return null;
         }
 
-        public void AddEmployee(Employee employee)
+        public bool AddEmployee(Employee employee)
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
-                SqlCommand cmd = new SqlCommand("spAddEmployee", con)
+                using (SqlCommand cmd = new SqlCommand("spAddEmployee", con)
                 {
                     CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@Name", employee.Name);
-                cmd.Parameters.AddWithValue("@Email", employee.Email);
-                cmd.Parameters.AddWithValue("@Password", employee.Password);
-                cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                })
+                {
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@Name", employee.Name);
+                        cmd.Parameters.AddWithValue("@Email", employee.Email);
+                        cmd.Parameters.AddWithValue("@Password", employee.Password);
+                        cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
+                        con.Open();
+                        int count = cmd.ExecuteNonQuery();
+                        if (count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        return false;
+                    }
+                }
             }
+            return false;
         }
 
         public void UpdateEmployee(Employee employee)
