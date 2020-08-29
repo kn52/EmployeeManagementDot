@@ -48,6 +48,7 @@
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return null;
                     }
                 }
@@ -85,6 +86,7 @@
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return null;
                     }
                 }
@@ -116,6 +118,7 @@
                     }
                     catch(Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return false;
                     }
                 }
@@ -148,6 +151,7 @@
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return false;
                     }
                 }
@@ -176,6 +180,7 @@
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return false;
                     }
                 }

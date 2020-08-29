@@ -33,6 +33,8 @@ namespace EmployeeDataWebApi
             services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
             services.AddSingleton(Configuration);
 
+            // Inject an implementation of ISwaggerProvider with defaulted settings applied
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +51,17 @@ namespace EmployeeDataWebApi
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
+            //app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
         }
     }
 }
