@@ -6,27 +6,30 @@
     
     public class EmployeeService : IEmployeeService
     {
+        public EmployeeService(IEmployeeRepository repository)
+        {
+            this.EmployeeRepository = repository;
+        }
+        public IEmployeeRepository EmployeeRepository { get; set; }
         public IEnumerable<Employee> GetAllEmployees()
         {
-            return Repository.GetAllEmployees();
+            return EmployeeRepository.GetAllEmployees();
         }
         public Employee GetEmployeeById(int? id)
         {
-            return Repository.GetEmployeeById(id);
+            return EmployeeRepository.GetEmployeeById(id);
         }
         public bool AddEmployee(Employee employee)
         {
-           return Repository.AddEmployee(employee);
+           return EmployeeRepository.AddEmployee(employee);
         }
         public bool UpdateEmployee(Employee employee)
         {
-            return Repository.UpdateEmployee(employee);
+            return EmployeeRepository.UpdateEmployee(employee);
         }
         public bool DeleteEmployee(int? id)
         {
-            return Repository.DeleteEmployee(id);
+            return EmployeeRepository.DeleteEmployee(id);
         }
-
-        private IEmployeeRepository Repository = new EmployeeRepository();
     }
 }

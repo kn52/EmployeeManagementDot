@@ -8,13 +8,17 @@
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        readonly IEmployeeService service = new EmployeeService();
-        
+        public EmployeeController(IEmployeeService service)
+        {
+            this.Service = service;
+        }
+        public IEmployeeService Service { get; set; }
+
         // GET api/values
         [HttpGet]
         public IActionResult Get()
         {
-            var EmployeeData = service.GetAllEmployees();
+            var EmployeeData = Service.GetAllEmployees();
             if (EmployeeData != null)
             {
                 return this.Ok(new { data = EmployeeData });
@@ -26,7 +30,7 @@
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var EmployeeData = service.GetEmployeeById(id);
+            var EmployeeData = Service.GetEmployeeById(id);
             if (EmployeeData != null)
             {
                 return this.Ok(new { Data = EmployeeData });
@@ -38,7 +42,7 @@
         [HttpPost]
         public IActionResult Post([FromBody] Employee employee)
         {
-            var data = service.AddEmployee(employee);
+            var data = Service.AddEmployee(employee);
             if (data)
             {
                 return this.Ok(new { data = "Added" });
@@ -50,7 +54,7 @@
         [HttpPut]
         public IActionResult Put([FromBody] Employee employee)
         {
-            var data = service.UpdateEmployee(employee);
+            var data = Service.UpdateEmployee(employee);
             if (data)
             {
                 return this.Ok(new { data = "Edited" });
@@ -62,7 +66,7 @@
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var data = service.DeleteEmployee(id);
+            var data = Service.DeleteEmployee(id);
             if (data)
             {
                 return this.Ok(new { data = "Deleted" });

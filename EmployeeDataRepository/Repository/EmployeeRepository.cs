@@ -5,8 +5,16 @@
     using System.Data;
     using System.Data.SqlClient;
     using EmployeeDataModel.Model;
+    using Microsoft.Extensions.Configuration;
+
     public class EmployeeRepository : IEmployeeRepository
     {
+        public EmployeeRepository(IConfiguration configuration)
+        {
+            this.Configuration = configuration;
+            DBString = this.Configuration["ConnectionString:DBConnection"];
+        }
+        public IConfiguration Configuration { get; set; }
         public IEnumerable<Employee> GetAllEmployees()
         {
             using (SqlConnection con = new SqlConnection(DBString))
@@ -175,6 +183,6 @@
             return false;
         }
 
-        private readonly string DBString = "Data Source=KNKNS;Initial Catalog=aashish;Integrated Security=True";
+        private readonly string DBString;
     }
 }
