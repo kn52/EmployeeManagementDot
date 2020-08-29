@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeDataRepository", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeDataModel", "EmployeeDataModel\EmployeeDataModel.csproj", "{27399F1A-9225-4D05-9C90-D3882D8093E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeDataService", "EmployeeDataService\EmployeeDataService.csproj", "{9F839621-0FC6-4F6B-ACBE-56E89B9A0897}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{27399F1A-9225-4D05-9C90-D3882D8093E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27399F1A-9225-4D05-9C90-D3882D8093E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27399F1A-9225-4D05-9C90-D3882D8093E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F839621-0FC6-4F6B-ACBE-56E89B9A0897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F839621-0FC6-4F6B-ACBE-56E89B9A0897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F839621-0FC6-4F6B-ACBE-56E89B9A0897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F839621-0FC6-4F6B-ACBE-56E89B9A0897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

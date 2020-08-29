@@ -1,20 +1,20 @@
 ﻿namespace EmployeeDataWebApi.Controllers
 {
-    using System.Collections.Generic;
     using EmployeeDataModel.Model;
-    using EmployeeDataRepository.Repository;
+    using EmployeeDataRepository.Model;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        IEmployeeRepository repository = new EmployeeRepository();
+        readonly IEmployeeService service = new EmployeeService();
+        
         // GET api/values
         [HttpGet]
         public IActionResult Get()
         {
-            var EmployeeData = repository.GetAllEmployees();
+            var EmployeeData = service.GetAllEmployees();
             if (EmployeeData != null)
             {
                 return this.Ok(new { data = EmployeeData });
@@ -26,7 +26,7 @@
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var EmployeeData = repository.GetEmployeeById(id);
+            var EmployeeData = service.GetEmployeeById(id);
             if (EmployeeData != null)
             {
                 return this.Ok(new { Data = EmployeeData });
@@ -38,7 +38,7 @@
         [HttpPost]
         public IActionResult Post([FromBody] Employee employee)
         {
-            var data = repository.AddEmployee(employee);
+            var data = service.AddEmployee(employee);
             if (data)
             {
                 return this.Ok(new { data = "Added" });
@@ -50,7 +50,7 @@
         [HttpPut]
         public IActionResult Put([FromBody] Employee employee)
         {
-            var data = repository.UpdateEmployee(employee);
+            var data = service.UpdateEmployee(employee);
             if (data)
             {
                 return this.Ok(new { data = "Edited" });
@@ -62,7 +62,7 @@
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var data = repository.DeleteEmployee(id);
+            var data = service.DeleteEmployee(id);
             if (data)
             {
                 return this.Ok(new { data = "Deleted" });
