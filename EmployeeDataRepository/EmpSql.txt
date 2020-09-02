@@ -1,0 +1,130 @@
+==============================================================================================
+USE [aashish]
+GO
+/****** Object:  StoredProcedure [dbo].[spAddEmployee]    Script Date: 8/28/2020 11:54:11 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[spAddEmployee]     
+(   
+	@Name VARCHAR(20),     
+    @Email VARCHAR(20),    
+    @Password VARCHAR(20),    
+    @PhoneNumber VARCHAR(10)    
+)    
+as     
+Begin
+	Begin try
+	If EXISTS (Select Email from tblEmployee where Email = @Email)
+		PRINT 'ERROR';
+	Else
+		Insert into tblEmployee (Name,Email,Password, PhoneNumber)     
+		Values (@Name,@Email,@Password, @PhoneNumber)
+	End try
+	Begin catch
+		Select ERROR_MESSAGE() as ErrorMsg 
+	End catch
+End
+===========================================================================================
+USE [aashish]
+GO
+/****** Object:  StoredProcedure [dbo].[spDeleteEmployee]    Script Date: 8/28/2020 11:55:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[spDeleteEmployee]     
+(      
+   @EmpId int      
+)      
+as       
+Begin
+	Begin try
+		If NOT EXISTS (Select * from tblEmployee where Id=@EmpId)
+			PRINT 'ERROR';
+		Else
+			Delete from tblEmployee where Id=@EmpId
+	End try
+	Begin catch
+		Select ERROR_MESSAGE() as ErrorMsg 
+	End catch
+End
+========================================================================================
+USE [aashish]
+GO
+/****** Object:  StoredProcedure [dbo].[spGetAllEmployees]    Script Date: 8/28/2020 11:55:30 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[spGetAllEmployees]    
+as    
+Begin 
+	Begin try
+		If NOT EXISTS (Select * from tblEmployee)
+			PRINT 'ERROR';
+		Else
+			select * from tblEmployee
+	End try
+	Begin catch
+		Select ERROR_MESSAGE() as ErrorMsg 
+	End catch
+End
+=======================================================================
+USE [aashish]
+GO
+/****** Object:  StoredProcedure [dbo].[spGetEmployeeById]    Script Date: 8/28/2020 11:56:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[spGetEmployeeById]     
+(      
+   @EmpId int      
+)      
+as       
+Begin
+	Begin try
+		If NOT EXISTS (Select * from tblEmployee where Id=@EmpId)
+			PRINT 'ERROR';
+		Else
+			Select * from tblEmployee where Id=@EmpId      
+	End try
+	Begin catch
+		Select ERROR_MESSAGE() as err
+	End catch
+End
+===============================================================================
+USE [aashish]
+GO
+/****** Object:  StoredProcedure [dbo].[spUpdateEmployee]    Script Date: 8/28/2020 11:56:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[spUpdateEmployee]      
+(      
+   @EmpId INTEGER ,    
+   @Name VARCHAR(20),     
+   @Email VARCHAR(20),    
+   @Password VARCHAR(20),    
+   @PhoneNumber VARCHAR(10)    
+)      
+as      
+Begin
+	Begin try
+		If NOT EXISTS (Select * from tblEmployee)
+			PRINT 'ERROR';
+		Else
+			Update tblEmployee       
+			set Name=@Name,      
+			Email=@Email,      
+			Password=@Password,    
+			PhoneNumber=@PhoneNumber      
+			where Id=@EmpId
+	End try
+	Begin catch
+		Select ERROR_MESSAGE() as ErrorMsg 
+	End catch
+End
