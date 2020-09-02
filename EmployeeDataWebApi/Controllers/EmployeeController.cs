@@ -26,21 +26,22 @@
             var EmployeeData = await Task.FromResult<IEnumerable<Employee>>(Service.GetAllEmployees()) ;
             if (EmployeeData != null)
             {
-                return this.Ok(new { Status = HttpStatusCode.OK, Message="Employee Data Found", Data = EmployeeData });
+                return this.Ok(new ResponseEntity(HttpStatusCode.Found, "Employee Data Found", EmployeeData));
             }
-            return this.BadRequest(new { Status = HttpStatusCode.NoContent, Message = "No Record Found",Data = "" });
+            return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent, "No Record Found",null));
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeById(int id)
         {
+            this.N
             var EmployeeData = await Task.FromResult<Employee>(Service.GetEmployeeById(id));
             if (EmployeeData != null)
             {
-                return this.Ok(new { Status = HttpStatusCode.OK, Message = "Employee Data Found", Data = EmployeeData });
+                return this.Ok(new ResponseEntity(HttpStatusCode.Found,"Employee Data Found",EmployeeData));
             }
-            return this.BadRequest(new { Status = HttpStatusCode.NoContent, Message = "No Record Found", Data = "" });
+            return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent, "No Record Found", null));
         }
 
         // POST api/values
@@ -50,9 +51,9 @@
             var data = await Task.FromResult<bool>(Service.AddEmployee(employee));
             if (data)
             {
-                return this.Ok(new { Status = HttpStatusCode.OK, Message = "Employee Added Successfully", Data = "" });
+                return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Employee Added Successfully", null));
             }
-            return this.BadRequest(new { Status = HttpStatusCode.NoContent, Message = "Employee Record Not Added", Data = "" });
+            return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent,"Employee Record Not Added", null));
         }
 
         // PUT api/values/5
@@ -62,9 +63,9 @@
             var data = await Task.FromResult<bool>(Service.UpdateEmployee(employee));
             if (data)
             {
-                return this.Ok(new { Status = HttpStatusCode.OK, Message = "Employee Record Edited Successfully", Data = "" });
+                return this.Ok(new ResponseEntity(HttpStatusCode.OK, "Employee Record Edited Successfully",null));
             }
-            return this.BadRequest(new { Status = HttpStatusCode.NoContent, Message = "No Record Found", Data = "" });
+            return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent, "No Record Found",null));
         }
 
         // DELETE api/values/5
@@ -74,9 +75,9 @@
             var data = await Task.FromResult<bool>(Service.DeleteEmployee(id));
             if (data)
             {
-                return this.Ok(new { Status = HttpStatusCode.OK, Message = "Employee Record Deleted Successfully", Data = "" });
+                return this.Ok(new ResponseEntity(HttpStatusCode.OK, "Employee Record Deleted Successfully", null));
             }
-            return this.BadRequest(new { Status = HttpStatusCode.NoContent, Message = "No Record Found", Data = "" });
+            return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent, "No Record Found", null));
         }
     }
 }
