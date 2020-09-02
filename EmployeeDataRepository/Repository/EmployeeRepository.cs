@@ -51,6 +51,10 @@
                         Console.WriteLine(ex);
                         return null;
                     }
+                    finally
+                    {
+                        con.Close();
+                    }
                 }
             }
             return null;
@@ -89,6 +93,10 @@
                         Console.WriteLine(ex);
                         return null;
                     }
+                    finally
+                    {
+                        con.Close();
+                    }
                 }
             }
             return null;
@@ -120,6 +128,10 @@
                     {
                         Console.WriteLine(ex);
                         return false;
+                    }
+                    finally
+                    {
+                        con.Close();
                     }
                 }
             }
@@ -154,6 +166,10 @@
                         Console.WriteLine(ex);
                         return false;
                     }
+                    finally
+                    {
+                        con.Close();
+                    }
                 }
             }
             return false;
@@ -182,6 +198,10 @@
                     {
                         Console.WriteLine(ex);
                         return false;
+                    }
+                    finally
+                    {
+                        con.Close();
                     }
                 }
             }

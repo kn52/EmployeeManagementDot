@@ -32,9 +32,17 @@ namespace EmployeeDataWebApi
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
             services.AddSingleton(Configuration);
-
             // Inject an implementation of ISwaggerProvider with defaulted settings applied
             services.AddSwaggerGen();
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin",
+                    builder => 
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    }); 
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +69,8 @@ namespace EmployeeDataWebApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+            app.UseCors();
 
         }
     }
