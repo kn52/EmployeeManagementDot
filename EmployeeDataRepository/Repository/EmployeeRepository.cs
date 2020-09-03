@@ -13,20 +13,21 @@
         {
             this.Configuration = configuration;
             DBString = this.Configuration["ConnectionString:DBConnection"];
+            conn = new SqlConnection(this.DBString);
         }
         public IConfiguration Configuration { get; set; }
         public IEnumerable<Employee> GetAllEmployees()
         {
-            using (SqlConnection con = new SqlConnection(DBString))
+            using (conn)
             {
-                using (SqlCommand cmd = new SqlCommand("spGetAllEmployees", con)
+                using (SqlCommand cmd = new SqlCommand("spGetAllEmployees", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
                 {
                     try
                     {
-                        con.Open();
+                        conn.Open();
                         SqlDataReader rdr = cmd.ExecuteReader();
                         if (rdr.HasRows)
                         {
@@ -53,7 +54,7 @@
                     }
                     finally
                     {
-                        con.Close();
+                        conn.Close();
                     }
                 }
             }
@@ -62,9 +63,9 @@
 
         public Employee GetEmployeeById(int? id)
         {
-            using (SqlConnection con = new SqlConnection(DBString))
+            using (conn)
             {
-                using (SqlCommand cmd = new SqlCommand("spGetEmployeeById", con)
+                using (SqlCommand cmd = new SqlCommand("spGetEmployeeById", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
@@ -72,7 +73,7 @@
                     try
                     {
                         cmd.Parameters.AddWithValue("@EmpId", id);
-                        con.Open();
+                        conn.Open();
                         SqlDataReader rdr = cmd.ExecuteReader();
                         if (rdr.HasRows)
                         {
@@ -95,7 +96,7 @@
                     }
                     finally
                     {
-                        con.Close();
+                        conn.Close();
                     }
                 }
             }
@@ -104,9 +105,9 @@
 
         public string AddEmployee(Employee employee)
         {
-            using (SqlConnection con = new SqlConnection(DBString))
+            using (conn)
             {
-                using (SqlCommand cmd = new SqlCommand("spAddEmployee", con)
+                using (SqlCommand cmd = new SqlCommand("spAddEmployee", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
@@ -116,9 +117,10 @@
                     cmd.Parameters.AddWithValue("@Password", employee.Password);
                     cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
                     cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+
                     try
                     {
-                        con.Open();
+                        conn.Open();
                         cmd.ExecuteNonQuery();
                         string id = cmd.Parameters["@id"].Value.ToString();
                         if (id !=null)
@@ -133,7 +135,7 @@
                     }
                     finally
                     {
-                        con.Close();
+                        conn.Close();
                     }
                 }
             }
@@ -142,21 +144,22 @@
 
         public bool UpdateEmployee(Employee employee)
         {
-            using (SqlConnection con = new SqlConnection(DBString))
+            using (conn)
             {
-                using (SqlCommand cmd = new SqlCommand("spUpdateEmployee", con)
+                using (SqlCommand cmd = new SqlCommand("spUpdateEmployee", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
                 {
+                    cmd.Parameters.AddWithValue("@EmpId", employee.ID);
+                    cmd.Parameters.AddWithValue("@Name", employee.Name);
+                    cmd.Parameters.AddWithValue("@Email", employee.Email);
+                    cmd.Parameters.AddWithValue("@Password", employee.Password);
+                    cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
+
                     try
                     {
-                        cmd.Parameters.AddWithValue("@EmpId", employee.ID);
-                        cmd.Parameters.AddWithValue("@Name", employee.Name);
-                        cmd.Parameters.AddWithValue("@Email", employee.Email);
-                        cmd.Parameters.AddWithValue("@Password", employee.Password);
-                        cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
-                        con.Open();
+                        conn.Open();
                         int count = cmd.ExecuteNonQuery();
                         if (count > 0)
                         {
@@ -170,7 +173,7 @@
                     }
                     finally
                     {
-                        con.Close();
+                        conn.Close();
                     }
                 }
             }
@@ -179,17 +182,18 @@
 
         public bool DeleteEmployee(int? id)
         {
-            using (SqlConnection con = new SqlConnection(DBString))
+            using (conn)
             {
-                using (SqlCommand cmd = new SqlCommand("spDeleteEmployee", con)
+                using (SqlCommand cmd = new SqlCommand("spDeleteEmployee", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
                 {
+                    cmd.Parameters.AddWithValue("@EmpId", id);
+
                     try
                     {
-                        cmd.Parameters.AddWithValue("@EmpId", id);
-                        con.Open();
+                        conn.Open();
                         int count = cmd.ExecuteNonQuery();
                         if (count > 0)
                         {
@@ -203,12 +207,14 @@
                     }
                     finally
                     {
-                        con.Close();
+                        conn.Close();
                     }
                 }
             }
             return false;
         }
+
+        private readonly SqlConnection conn;
 
         private readonly string DBString;
     }

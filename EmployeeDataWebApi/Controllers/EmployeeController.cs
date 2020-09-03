@@ -50,8 +50,8 @@
             var employeeId = await Task.FromResult<string>(Service.AddEmployee(employee));
             if (employeeId != null)
             {
-                return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Employee Added Successfully", 
-                    "Record Inserted Successfully. ID = " + employeeId));
+                return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Record Inserted Successfully. ID = " + employeeId, 
+                    null));
             }
             return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent,"Employee Record Not Added", null));
         }
