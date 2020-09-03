@@ -1,7 +1,5 @@
 ==============================================================================================
-USE [aashish]
 GO
-/****** Object:  StoredProcedure [dbo].[spAddEmployee]    Script Date: 8/28/2020 11:54:11 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11,25 +9,35 @@ ALTER procedure [dbo].[spAddEmployee]
 	@Name VARCHAR(20),     
     @Email VARCHAR(20),    
     @Password VARCHAR(20),    
-    @PhoneNumber VARCHAR(10)    
+    @PhoneNumber VARCHAR(10),
+	@id int OUTPUT
 )    
 as     
-Begin
-	Begin try
-	If EXISTS (Select Email from tblEmployee where Email = @Email)
-		PRINT 'ERROR';
-	Else
-		Insert into tblEmployee (Name,Email,Password, PhoneNumber)     
-		Values (@Name,@Email,@Password, @PhoneNumber)
-	End try
-	Begin catch
-		Select ERROR_MESSAGE() as ErrorMsg 
-	End catch
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF EXISTS (SELECT Email FROM tblEmployee WHERE Email = @Email)
+				PRINT 'NO SUCH EMAIL EXIST';
+			ELSE
+				BEGIN
+					INSERT INTO tblEmployee (Name,Email,Password, PhoneNumber)     
+						VALUES (@Name,@Email,@Password, @PhoneNumber);	
+					COMMIT TRANSACTION
+					SET @id=SCOPE_IDENTITY()
+					RETURN @id
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
 End
 ===========================================================================================
-USE [aashish]
 GO
-/****** Object:  StoredProcedure [dbo].[spDeleteEmployee]    Script Date: 8/28/2020 11:55:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -39,42 +47,57 @@ ALTER procedure [dbo].[spDeleteEmployee]
    @EmpId int      
 )      
 as       
-Begin
-	Begin try
-		If NOT EXISTS (Select * from tblEmployee where Id=@EmpId)
-			PRINT 'ERROR';
-		Else
-			Delete from tblEmployee where Id=@EmpId
-	End try
-	Begin catch
-		Select ERROR_MESSAGE() as ErrorMsg 
-	End catch
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF NOT EXISTS (SELECT * FROM tblEmployee WHERE Id=@EmpId)
+				PRINT 'NO SUCH EMPLOYEE ID EXIST ';
+			ELSE
+				BEGIN
+					DELETE FROM tblEmployee WHERE Id=@EmpId	
+					COMMIT TRANSACTION
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
 End
+
 ========================================================================================
-USE [aashish]
 GO
-/****** Object:  StoredProcedure [dbo].[spGetAllEmployees]    Script Date: 8/28/2020 11:55:30 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 ALTER procedure [dbo].[spGetAllEmployees]    
 as    
-Begin 
-	Begin try
-		If NOT EXISTS (Select * from tblEmployee)
-			PRINT 'ERROR';
-		Else
-			select * from tblEmployee
-	End try
-	Begin catch
-		Select ERROR_MESSAGE() as ErrorMsg 
-	End catch
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF NOT EXISTS (SELECT * FROM tblEmployee)
+				PRINT 'NO RECORD FOUND'
+			ELSE
+				BEGIN
+					SELECT * FROM tblEmployee;
+					COMMIT TRANSACTION
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
 End
 =======================================================================
-USE [aashish]
 GO
-/****** Object:  StoredProcedure [dbo].[spGetEmployeeById]    Script Date: 8/28/2020 11:56:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -84,21 +107,28 @@ ALTER procedure [dbo].[spGetEmployeeById]
    @EmpId int      
 )      
 as       
-Begin
-	Begin try
-		If NOT EXISTS (Select * from tblEmployee where Id=@EmpId)
-			PRINT 'ERROR';
-		Else
-			Select * from tblEmployee where Id=@EmpId      
-	End try
-	Begin catch
-		Select ERROR_MESSAGE() as err
-	End catch
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF NOT EXISTS (SELECT * FROM tblEmployee WHERE Id=@EmpId)
+				PRINT 'NO SUCH EMPLOYEE ID EXIST';
+			ELSE
+				BEGIN
+					SELECT * FROM tblEmployee WHERE Id=@EmpId;
+					COMMIT TRANSACTION
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
 End
 ===============================================================================
-USE [aashish]
 GO
-/****** Object:  StoredProcedure [dbo].[spUpdateEmployee]    Script Date: 8/28/2020 11:56:34 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -112,19 +142,27 @@ ALTER procedure [dbo].[spUpdateEmployee]
    @PhoneNumber VARCHAR(10)    
 )      
 as      
-Begin
-	Begin try
-		If NOT EXISTS (Select * from tblEmployee)
-			PRINT 'ERROR';
-		Else
-			Update tblEmployee       
-			set Name=@Name,      
-			Email=@Email,      
-			Password=@Password,    
-			PhoneNumber=@PhoneNumber      
-			where Id=@EmpId
-	End try
-	Begin catch
-		Select ERROR_MESSAGE() as ErrorMsg 
-	End catch
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF NOT EXISTS (SELECT * FROM tblEmployee WHERE Id=@EmpId)
+				PRINT 'NO SUCH EMPLOYEE ID EXIST';
+			ELSE
+				BEGIN
+					UPDATE tblEmployee       
+					SET Name=@Name,      
+					Email=@Email,      
+					Password=@Password,    
+					PhoneNumber=@PhoneNumber WHERE Id=@EmpId;	
+					COMMIT TRANSACTION
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
 End
