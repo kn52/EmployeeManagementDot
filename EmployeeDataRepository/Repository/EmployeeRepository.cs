@@ -13,12 +13,11 @@
         {
             this.Configuration = configuration;
             DBString = this.Configuration["ConnectionString:DBConnection"];
-            conn = new SqlConnection(this.DBString);
         }
         public IConfiguration Configuration { get; set; }
         public IEnumerable<Employee> GetAllEmployees()
         {
-            using (conn)
+            using (SqlConnection conn = new SqlConnection(this.DBString))
             {
                 using (SqlCommand cmd = new SqlCommand("spGetAllEmployees", conn)
                 {
@@ -63,16 +62,17 @@
 
         public Employee GetEmployeeById(int? id)
         {
-            using (conn)
+            using (SqlConnection conn = new SqlConnection(this.DBString))
             {
                 using (SqlCommand cmd = new SqlCommand("spGetEmployeeById", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 })
                 {
+                    cmd.Parameters.AddWithValue("@EmpId", id);
+
                     try
                     {
-                        cmd.Parameters.AddWithValue("@EmpId", id);
                         conn.Open();
                         SqlDataReader rdr = cmd.ExecuteReader();
                         if (rdr.HasRows)
@@ -105,7 +105,7 @@
 
         public string AddEmployee(Employee employee)
         {
-            using (conn)
+            using (SqlConnection conn = new SqlConnection(this.DBString))
             {
                 using (SqlCommand cmd = new SqlCommand("spAddEmployee", conn)
                 {
@@ -144,7 +144,7 @@
 
         public bool UpdateEmployee(Employee employee)
         {
-            using (conn)
+            using (SqlConnection conn = new SqlConnection(this.DBString))
             {
                 using (SqlCommand cmd = new SqlCommand("spUpdateEmployee", conn)
                 {
@@ -182,7 +182,7 @@
 
         public bool DeleteEmployee(int? id)
         {
-            using (conn)
+            using (SqlConnection conn = new SqlConnection(this.DBString))
             {
                 using (SqlCommand cmd = new SqlCommand("spDeleteEmployee", conn)
                 {
@@ -213,8 +213,6 @@
             }
             return false;
         }
-
-        private readonly SqlConnection conn;
 
         private readonly string DBString;
     }
