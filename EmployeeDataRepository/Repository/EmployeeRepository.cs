@@ -102,7 +102,7 @@
             return null;
         }
 
-        public bool AddEmployee(Employee employee)
+        public string AddEmployee(Employee employee)
         {
             using (SqlConnection con = new SqlConnection(DBString))
             {
@@ -111,23 +111,25 @@
                     CommandType = CommandType.StoredProcedure
                 })
                 {
+                    cmd.Parameters.AddWithValue("@Name", employee.Name);
+                    cmd.Parameters.AddWithValue("@Email", employee.Email);
+                    cmd.Parameters.AddWithValue("@Password", employee.Password);
+                    cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
                     try
                     {
-                        cmd.Parameters.AddWithValue("@Name", employee.Name);
-                        cmd.Parameters.AddWithValue("@Email", employee.Email);
-                        cmd.Parameters.AddWithValue("@Password", employee.Password);
-                        cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
                         con.Open();
-                        int count = cmd.ExecuteNonQuery();
-                        if (count > 0)
+                        cmd.ExecuteNonQuery();
+                        string id = cmd.Parameters["@id"].Value.ToString();
+                        if (id !=null)
                         {
-                            return true;
+                            return id;
                         }
                     }
                     catch(Exception ex)
                     {
                         Console.WriteLine(ex);
-                        return false;
+                        return null;
                     }
                     finally
                     {
@@ -135,7 +137,7 @@
                     }
                 }
             }
-            return false;
+            return null;
         }
 
         public bool UpdateEmployee(Employee employee)

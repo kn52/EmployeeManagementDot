@@ -19,7 +19,7 @@
         {
             return EmployeeRepository.GetEmployeeById(id);
         }
-        public bool AddEmployee(Employee employee)
+        public string AddEmployee(Employee employee)
         {
            return EmployeeRepository.AddEmployee(employee);
         }

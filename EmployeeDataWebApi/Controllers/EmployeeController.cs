@@ -35,7 +35,6 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeById(int id)
         {
-            this.N
             var EmployeeData = await Task.FromResult<Employee>(Service.GetEmployeeById(id));
             if (EmployeeData != null)
             {
@@ -48,10 +47,11 @@
         [HttpPost]
         public async Task<IActionResult> AddEmployee([FromBody] Employee employee)
         {
-            var data = await Task.FromResult<bool>(Service.AddEmployee(employee));
-            if (data)
+            var employeeId = await Task.FromResult<string>(Service.AddEmployee(employee));
+            if (employeeId != null)
             {
-                return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Employee Added Successfully", null));
+                return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Employee Added Successfully", 
+                    "Record Inserted Successfully. ID = " + employeeId));
             }
             return this.BadRequest(new ResponseEntity(HttpStatusCode.NoContent,"Employee Record Not Added", null));
         }
