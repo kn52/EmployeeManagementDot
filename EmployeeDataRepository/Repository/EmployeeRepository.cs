@@ -36,7 +36,8 @@
                                 Employee employee = new Employee
                                 {
                                     ID = Convert.ToInt32(rdr["Id"]),
-                                    Name = rdr["Name"].ToString(),
+                                    FirstName = rdr["FName"].ToString(),
+                                    LastName = rdr["LName"].ToString(),
                                     Email = rdr["Email"].ToString(),
                                     Password = rdr["Password"].ToString(),
                                     PhoneNumber = rdr["PhoneNumber"].ToString()
@@ -81,7 +82,8 @@
                             while (rdr.Read())
                             {
                                 employee.ID = Convert.ToInt32(rdr["Id"]);
-                                employee.Name = rdr["Name"].ToString();
+                                employee.FirstName = rdr["FName"].ToString();
+                                employee.LastName = rdr["LName"].ToString();
                                 employee.Email = rdr["Email"].ToString();
                                 employee.Password = rdr["Password"].ToString();
                                 employee.PhoneNumber = rdr["PhoneNumber"].ToString();
@@ -112,7 +114,8 @@
                     CommandType = CommandType.StoredProcedure
                 })
                 {
-                    cmd.Parameters.AddWithValue("@Name", employee.Name);
+                    cmd.Parameters.AddWithValue("@FName", employee.FirstName);
+                    cmd.Parameters.AddWithValue("@LName", employee.LastName);
                     cmd.Parameters.AddWithValue("@Email", employee.Email);
                     cmd.Parameters.AddWithValue("@Password", employee.Password);
                     cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
@@ -152,7 +155,8 @@
                 })
                 {
                     cmd.Parameters.AddWithValue("@EmpId", employee.ID);
-                    cmd.Parameters.AddWithValue("@Name", employee.Name);
+                    cmd.Parameters.AddWithValue("@FName", employee.FirstName);
+                    cmd.Parameters.AddWithValue("@LName", employee.LastName);
                     cmd.Parameters.AddWithValue("@Email", employee.Email);
                     cmd.Parameters.AddWithValue("@Password", employee.Password);
                     cmd.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
