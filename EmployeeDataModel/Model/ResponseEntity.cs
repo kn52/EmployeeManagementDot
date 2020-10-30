@@ -1,7 +1,6 @@
-﻿using System.Net;
-
-namespace EmployeeDataModel.Model
+﻿namespace EmployeeDataModel.Model
 {
+    using System.Net;
     public class ResponseEntity
     {
         public HttpStatusCode httpStatusCode;

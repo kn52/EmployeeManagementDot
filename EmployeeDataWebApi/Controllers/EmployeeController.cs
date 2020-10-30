@@ -1,11 +1,10 @@
 ﻿namespace EmployeeDataWebApi.Controllers
 {
     using EmployeeDataModel.Model;
-    using EmployeeDataRepository.Model;
+    using EmployeeDataService.Service;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -22,11 +21,12 @@
 
         // GET api/values
         [HttpGet]
+        [Route("all")]
         public async Task<IActionResult> GetAllEmployee()
         {
             try
             {
-                var EmployeeData = await Task.FromResult<IEnumerable<Employee>>(Service.GetAllEmployees());
+                var EmployeeData = await Task.FromResult(Service.GetAllEmployees());
                 if (EmployeeData != null)
                 {
                     return this.Ok(new ResponseEntity(HttpStatusCode.Found, "Employee Data Found", EmployeeData));
@@ -34,15 +34,16 @@
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex);
                 return this.BadRequest(new ResponseEntity(HttpStatusCode.BadRequest, "Bad Request", null));
             }
             
             return this.Ok(new ResponseEntity(HttpStatusCode.NoContent, "No Record Found",null));
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
+        [HttpGet]
+        [Route("byId/{id}")]
+        public async Task<IActionResult> GetEmployeeById([FromBody] int id)
         {
             try
             {
@@ -54,6 +55,7 @@
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return this.BadRequest(new ResponseEntity(HttpStatusCode.BadRequest, "Bad Request", null));
             }
             
@@ -62,12 +64,13 @@
 
         // POST api/values
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> AddEmployee([FromBody] Employee employee)
         {
             try
             {
-                var employeeId = await Task.FromResult<string>(Service.AddEmployee(employee));
-                if (employeeId != null)
+                var employeeId = await Task.FromResult(Service.AddEmployee(employee));
+                if (employeeId != null && employeeId !="")
                 {
                     return this.Ok(new ResponseEntity(HttpStatusCode.Created, "Record Inserted Successfully. ID = " + employeeId,
                         null));
@@ -75,6 +78,7 @@
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex);
                 return this.BadRequest(new ResponseEntity(HttpStatusCode.BadRequest, "Bad Request", null));
             }
             
@@ -83,11 +87,12 @@
 
         // PUT api/values/5
         [HttpPut]
+        [Route("edit")]
         public async Task<IActionResult> EditEmployee([FromBody] Employee employee)
         {
             try
             {
-                var data = await Task.FromResult<bool>(Service.UpdateEmployee(employee));
+                var data = await Task.FromResult(Service.UpdateEmployee(employee));
                 if (data)
                 {
                     return this.Ok(new ResponseEntity(HttpStatusCode.OK, "Employee Record Edited Successfully", null));
@@ -95,6 +100,7 @@
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return this.BadRequest(new ResponseEntity(HttpStatusCode.BadRequest, "Bad Request", null));
             }
             
@@ -102,7 +108,8 @@
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             try
@@ -115,6 +122,7 @@
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return this.BadRequest(new ResponseEntity(HttpStatusCode.BadRequest, "Bad Request", null));
             }
 

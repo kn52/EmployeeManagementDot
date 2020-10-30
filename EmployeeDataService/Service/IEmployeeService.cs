@@ -1,4 +1,4 @@
-﻿namespace EmployeeDataRepository.Model
+﻿namespace EmployeeDataService.Service
 {
     using EmployeeDataModel.Model;
     using System.Collections.Generic;
