@@ -12,7 +12,7 @@
         public EmployeeRepository(IConfiguration configuration)
         {
             this.Configuration = configuration;
-            DBString = this.Configuration["ConnectionString:DBConnection"];
+            DBString = this.Configuration["ConnectionStrings:DBConnection"];
         }
         public IConfiguration Configuration { get; set; }
         public IEnumerable<Employee> GetAllEmployees()

@@ -1,80 +1,7 @@
-==============================================================================================
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER procedure [dbo].[spAddEmployee]     
-(   
-	@Name VARCHAR(20),     
-    @Email VARCHAR(20),    
-    @Password VARCHAR(20),    
-    @PhoneNumber VARCHAR(10),
-	@id int OUTPUT
-)    
-as     
-BEGIN
-	BEGIN TRANSACTION
-		SAVE TRANSACTION savePoint 
-		BEGIN TRY
-			IF EXISTS (SELECT Email FROM tblEmployee WHERE Email = @Email)
-				PRINT 'NO SUCH EMAIL EXIST';
-			ELSE
-				BEGIN
-					INSERT INTO tblEmployee (Name,Email,Password, PhoneNumber)     
-						VALUES (@Name,@Email,@Password, @PhoneNumber);	
-					COMMIT TRANSACTION
-					SET @id=SCOPE_IDENTITY()
-					RETURN @id
-				END
-		End TRY
-		Begin catch
-			SELECT ERROR_MESSAGE() AS ErrorMsg
-			IF @@TRANCOUNT > 0
-				BEGIN
-					ROLLBACK TRANSACTION savePoint
-				END
-		End CATCH
-End
 ===========================================================================================
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER procedure [dbo].[spDeleteEmployee]     
-(      
-   @EmpId int      
-)      
-as       
-BEGIN
-	BEGIN TRANSACTION
-		SAVE TRANSACTION savePoint 
-		BEGIN TRY
-			IF NOT EXISTS (SELECT * FROM tblEmployee WHERE Id=@EmpId)
-				PRINT 'NO SUCH EMPLOYEE ID EXIST ';
-			ELSE
-				BEGIN
-					DELETE FROM tblEmployee WHERE Id=@EmpId	
-					COMMIT TRANSACTION
-				END
-		End TRY
-		Begin catch
-			SELECT ERROR_MESSAGE() AS ErrorMsg
-			IF @@TRANCOUNT > 0
-				BEGIN
-					ROLLBACK TRANSACTION savePoint
-				END
-		End CATCH
-End
-
-========================================================================================
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER procedure [dbo].[spGetAllEmployees]    
+GET ALL
+===========================================================================================
+create procedure spGetAllEmployees    
 as    
 BEGIN
 	BEGIN TRANSACTION
@@ -96,13 +23,12 @@ BEGIN
 				END
 		End CATCH
 End
-=======================================================================
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER procedure [dbo].[spGetEmployeeById]     
+===========================================================================================
+
+===========================================================================================
+GET BY ID
+===========================================================================================
+create procedure spGetEmployeeById     
 (      
    @EmpId int      
 )      
@@ -127,19 +53,57 @@ BEGIN
 				END
 		End CATCH
 End
-===============================================================================
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER procedure [dbo].[spUpdateEmployee]      
+===========================================================================================
+
+===========================================================================================
+ADD
+===========================================================================================
+create procedure spAddEmployee     
+(   
+	@FName VARCHAR(100),
+	@LName VARCHAR(100),
+    @Email VARCHAR(100),    
+    @Password VARCHAR(100),    
+    @PhoneNumber VARCHAR(100),
+	@id int OUTPUT
+)    
+as     
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF EXISTS (SELECT Email FROM tblEmployee WHERE Email = @Email)
+				PRINT 'NO SUCH EMAIL EXIST';
+			ELSE
+				BEGIN
+					INSERT INTO tblEmployee (FName,LName,Email,Password, PhoneNumber)     
+						VALUES (@FName,@LName,@Email,@Password, @PhoneNumber);	
+					COMMIT TRANSACTION
+					SET @id=SCOPE_IDENTITY()
+					RETURN @id
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
+End
+===========================================================================================
+
+===========================================================================================
+UPDATE
+===========================================================================================
+create procedure spUpdateEmployee      
 (      
    @EmpId INTEGER ,    
-   @Name VARCHAR(20),     
-   @Email VARCHAR(20),    
-   @Password VARCHAR(20),    
-   @PhoneNumber VARCHAR(10)    
+   @FName VARCHAR(100),
+   @LName VARCHAR(100),
+   @Email VARCHAR(100),    
+   @Password VARCHAR(100),    
+   @PhoneNumber VARCHAR(100)    
 )      
 as      
 BEGIN
@@ -151,7 +115,8 @@ BEGIN
 			ELSE
 				BEGIN
 					UPDATE tblEmployee       
-					SET Name=@Name,      
+					SET FName=@LName,
+					LName=@LName,
 					Email=@Email,      
 					Password=@Password,    
 					PhoneNumber=@PhoneNumber WHERE Id=@EmpId;	
@@ -166,3 +131,35 @@ BEGIN
 				END
 		End CATCH
 End
+===========================================================================================
+
+===========================================================================================
+DELETE
+===========================================================================================
+create procedure spDeleteEmployee     
+(      
+   @EmpId int      
+)      
+as       
+BEGIN
+	BEGIN TRANSACTION
+		SAVE TRANSACTION savePoint 
+		BEGIN TRY
+			IF NOT EXISTS (SELECT * FROM tblEmployee WHERE Id=@EmpId)
+				PRINT 'NO SUCH EMPLOYEE ID EXIST ';
+			ELSE
+				BEGIN
+					DELETE FROM tblEmployee WHERE Id=@EmpId	
+					COMMIT TRANSACTION
+				END
+		End TRY
+		Begin catch
+			SELECT ERROR_MESSAGE() AS ErrorMsg
+			IF @@TRANCOUNT > 0
+				BEGIN
+					ROLLBACK TRANSACTION savePoint
+				END
+		End CATCH
+End
+===========================================================================================
+

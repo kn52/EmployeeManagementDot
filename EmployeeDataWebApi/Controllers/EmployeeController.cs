@@ -19,7 +19,7 @@
         }
         public IEmployeeService Service { get; set; }
 
-        // GET api/values
+        // GET api/values   
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllEmployee()

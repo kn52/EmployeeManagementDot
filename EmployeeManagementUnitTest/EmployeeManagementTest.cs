@@ -1,15 +1,14 @@
-using EmployeeDataModel.Model;
-using EmployeeDataService.Service;
-using EmployeeDataWebApi.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-
 namespace EmployeeManagementUnitTest
 {
+    using EmployeeDataModel.Model;
+    using EmployeeDataService.Service;
+    using EmployeeDataWebApi.Controllers;
+    using Microsoft.AspNetCore.Mvc;
+    using Moq;
+    using NUnit.Framework;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Threading.Tasks;
     public class EmployeeManagementTest
     {
         private EmployeeController EmployeeController;
@@ -74,6 +73,21 @@ namespace EmployeeManagementUnitTest
         }
 
         [Test]
+        public async Task When_GetAllEmployees_ShouldReturn_NullEmployeesAsync()
+        {
+            List<Employee> list = null;
+            var service = new Mock<IEmployeeService>();
+            service.Setup(x => x.GetAllEmployees()).Returns(list);
+            EmployeeController = new EmployeeController(service.Object);
+            OkObjectResult actionResult = (OkObjectResult)await EmployeeController.GetAllEmployee();
+            ResponseEntity responseEntity = (ResponseEntity)actionResult.Value;
+            Assert.IsNotNull(actionResult);
+            Assert.AreEqual(200, actionResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NoContent, responseEntity.httpStatusCode);
+            Assert.AreEqual("No Record Found", responseEntity.message);
+        }
+
+        [Test]
         public async Task When_GetEmployeeById_ShouldReturn_SuccessResult()
         {
             var service = new Mock<IEmployeeService>();
@@ -93,6 +107,21 @@ namespace EmployeeManagementUnitTest
             Assert.AreEqual(200, actionResult.StatusCode);
             Assert.AreEqual(HttpStatusCode.Found, responseEntity.httpStatusCode);
             Assert.AreEqual("Employee Data Found", responseEntity.message);
+        }
+
+        [Test]
+        public async Task When_GetEmployeeById_ShouldReturn_NullResult()
+        {
+            Employee list = null;
+            var service = new Mock<IEmployeeService>();
+            service.Setup(x => x.GetEmployeeById(It.IsAny<int>())).Returns(list);
+            EmployeeController = new EmployeeController(service.Object);
+            OkObjectResult actionResult = (OkObjectResult)await EmployeeController.GetEmployeeById(10);
+            ResponseEntity responseEntity = (ResponseEntity)actionResult.Value;
+            Assert.IsNotNull(actionResult);
+            Assert.AreEqual(200, actionResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NoContent, responseEntity.httpStatusCode);
+            Assert.AreEqual("No Record Found", responseEntity.message);
         }
 
         [Test]
