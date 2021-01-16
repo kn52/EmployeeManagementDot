@@ -43,7 +43,7 @@
 
         [HttpGet]
         [Route("byId/{id}")]
-        public async Task<IActionResult> GetEmployeeById([FromBody] int id)
+        public async Task<IActionResult> GetEmployeeById(int id)
         {
             try
             {
@@ -69,6 +69,7 @@
         {
             try
             {
+                employee.Email = employee.Email.ToLower();
                 var employeeId = await Task.FromResult(Service.AddEmployee(employee));
                 if (employeeId != null && employeeId !="")
                 {
@@ -92,6 +93,7 @@
         {
             try
             {
+                employee.Email = employee.Email.ToLower();
                 var data = await Task.FromResult(Service.UpdateEmployee(employee));
                 if (data)
                 {
